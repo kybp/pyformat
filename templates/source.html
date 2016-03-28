@@ -8,7 +8,20 @@
   {%- else -%}
     <span class="python-name">{{- alias.name -}}</span>
   {%- endif -%}
-{% endmacro %}
+{%- endmacro %}
+
+{% macro print_decorator(node) %}
+  @{{- print_form(node) -}}
+{%- endmacro %}
+
+{% macro print_call(node) %}
+  {{- print_form(node.func) -}}
+  {%- for arg in node.args -%}
+    {%- if loop.first -%}({%- endif -%}
+    {{- print_form(arg) -}}
+    {%- if loop.last -%}){%- else -%}, {%- endif -%}
+  {%- endfor -%}
+{%- endmacro %}
 
 {% macro print_import(node) %}
   <span class="python-keyword python-import">import</span>
@@ -16,7 +29,7 @@
     {{ print_alias(alias) }}
     {%- if not loop.last %}, {% endif %}
   {% endfor %}
-{% endmacro %}
+{%- endmacro %}
 
 {% macro print_import_from(node) %}
   <span class="python-keyword python-import">from</span>
@@ -26,12 +39,13 @@
     {{ print_alias(alias) }}
     {%- if not loop.last %}, {% endif %}
   {% endfor %}
-{% endmacro %}
+{%- endmacro %}
 
 {% macro print_function_def(node, indent) %}
   {% for decorator in node.decorator_list %}
     {{ print_decorator(decorator) }}
   {% endfor %}
+  <br />
   <span class="python-keyword python-def">def</span>
   <span class="python-name">{{ node.name }}</span>
   {%- for arg in node.args.args %}
@@ -41,32 +55,34 @@
   {% endfor -%}
   :
   {{- print_block(node.body, indent + 1) -}}
-{% endmacro %}
+{%- endmacro %}
 
 {% macro print_binop(node) %}
   {{ print_form(node.left) }}
   {{ print_op(node.op) }}
   {{ print_form(node.right) }}
-{% endmacro %}
+{%- endmacro %}
 
 {% macro print_form(node) %}
-  {% if node.node_type == 'Expr' %}
-    {{ print_form(node.value) }}
-  {% elif node.node_type == 'Num' %}
+  {%- if node.node_type == 'Expr' -%}
+    {{- print_form(node.value) -}}
+  {%- elif node.node_type == 'Call' -%}
+    {{- print_call(node) -}}
+  {%- elif node.node_type == 'Num' -%}
     <span class="python-number">{{ node.n }}</span>
-  {% elif node.node_type == 'Str' %}
+  {%- elif node.node_type == 'Str' -%}
     <span class="python-string">'{{ node.s }}'</span>
-  {% elif node.node_type == 'Name' %}
+  {%- elif node.node_type == 'Name' -%}
     <span class="python-name">{{ node.id }}</span>
-  {% elif node.node_type == 'BinOp' %}
+  {%- elif node.node_type == 'BinOp' -%}
     {{ print_binop(node) }}
-  {% elif node.node_type == 'Return' %}
+  {%- elif node.node_type == 'Return' -%}
     <span class="python-return">return</span>
-    {% if node.value %}{{ print_form(node.value) }}{% endif %}
-  {% else %}
+    {%- if node.value %} {{ print_form(node.value) }}{% endif -%}
+  {%- else -%}
     ???{{ node.node_type }}
-  {% endif %}
-{% endmacro %}
+  {%- endif -%}
+{%- endmacro %}
 
 {% macro print_op(node) %}
   {%- if node.node_type == 'Add' %}
@@ -74,7 +90,7 @@
   {% elif node.node_type == 'Mult' %}
     *
   {% endif %}
-{% endmacro %}
+{%- endmacro %}
 
 {% macro print_block(block, indent) %}
   {%- for node in block -%}
@@ -82,20 +98,20 @@
       {{- print_offset(indent) -}}
       {%- if node.node_type == 'Import' -%}
         {{- print_import(node) -}}
-      {% elif node.node_type == 'ImportFrom' %}
+      {%- elif node.node_type == 'ImportFrom' -%}
         {{- print_import_from(node) -}}
-      {% elif node.node_type == 'FunctionDef' %}
+      {%- elif node.node_type == 'FunctionDef' -%}
         {{- print_function_def(node, indent) -}}
-      {% else %}
+      {%- else -%}
         {{ print_form(node) }}
-      {% endif -%}
+      {%- endif -%}
     </div>
   {% endfor %}
-{% endmacro %}
+{%- endmacro %}
 
 {% macro print_offset(indent_level) %}
 {% for i in range(indent_level) %}&nbsp;{% endfor %}
-{% endmacro %}
+{%- endmacro %}
 
 {% block body %}
 
