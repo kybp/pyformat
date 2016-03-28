@@ -3,7 +3,7 @@
 {% macro print_alias(alias) %}
   {%- if alias.asname -%}
     <span class="python-name">{{- alias.name -}}</span>
-    <span class="python-keyword python-as">as</span>
+    <span class="python-keyword python-import">as</span>
     <span class="python-name">{{- alias.asname -}}</span>
   {%- else -%}
     <span class="python-name">{{- alias.name -}}</span>
@@ -53,11 +53,11 @@
   {% if node.node_type == 'Expr' %}
     {{ print_form(node.value) }}
   {% elif node.node_type == 'Num' %}
-    {{ node.n }}
+    <span class="python-number">{{ node.n }}</span>
   {% elif node.node_type == 'Str' %}
-    '{{ node.s }}'
+    <span class="python-string">'{{ node.s }}'</span>
   {% elif node.node_type == 'Name' %}
-    {{ node.id }}
+    <span class="python-name">{{ node.id }}</span>
   {% elif node.node_type == 'BinOp' %}
     {{ print_binop(node) }}
   {% elif node.node_type == 'Return' %}
