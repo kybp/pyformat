@@ -168,10 +168,10 @@
 
 {% block body %}
 
-{% include "color-config.html" %}
-
 <div class="python-source">
   {{ print_block(ast, 0) }}
 </div>
+
+{% include "color-config.html" %}
 
 {% endblock %}
