@@ -1,3 +1,11 @@
 div.python-source {
     font-family: courier;
 }
+
+span.python-keyword {
+    color: #f0f;
+}
+
+span.python-import {
+    color: #777;
+}
