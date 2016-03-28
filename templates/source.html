@@ -16,11 +16,12 @@
 
 {% macro print_call(node) %}
   {{- print_form(node.func) -}}
+  (
   {%- for arg in node.args -%}
-    {%- if loop.first -%}({%- endif -%}
     {{- print_form(arg) -}}
-    {%- if loop.last -%}){%- else -%}, {%- endif -%}
+    {%- if not loop.last -%},{% endif -%}
   {%- endfor -%}
+  )
 {%- endmacro %}
 
 {% macro print_import(node) %}
@@ -47,13 +48,12 @@
   {% endfor %}
   <br />
   <span class="python-keyword python-def">def</span>
-  <span class="python-name">{{ node.name }}</span>
-  {%- for arg in node.args.args %}
-    {% if loop.first %}({% endif -%}
+  <span class="python-name">{{ node.name }}</span>(
+  {%- for arg in node.args.args -%}
     <span class="python-name">{{ arg.arg }}</span>
-    {%- if loop.last %}){% else %}, {% endif %}
-  {% endfor -%}
-  :
+    {%- if not loop.last %},{% endif -%}
+  {%- endfor -%}
+  ):
   {{- print_block(node.body, indent + 1) -}}
 {%- endmacro %}
 
