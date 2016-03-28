@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% macro print_alias(alias) %}
+  {%- if alias.asname -%}
+    <span class="python-name">{{ alias.name }}</span>
+    <span class="python-keyword python-as"> as </span>
+    <span class="python-name">{{ alias.asname }}</span>
+  {%- else -%}
+    <span class="python-name">{{ alias.name }}</span>
+  {%- endif -%}
+{% endmacro %}
+
+{% block body %}
+
+<div class="python-source">
+{% for node in ast %}
+  <div class="python-line">
+    {% if node.node_type == 'Import' %}
+      <span class="python-keyword python-import">import</span>
+      {% for alias in node.names %}
+        {{ print_alias(alias) }}
+        {%- if not loop.last %}, {% endif %}
+      {% endfor %}
+
+    {% elif node.node_type == 'ImportFrom' %}
+      <span class="python-keyword python-from">from</span>
+      <span class="python-name">{{ node.module }}</span>
+      <span class="python-keyword python-import"> import </span>
+      {% for alias in node.names %}
+        {{ print_alias(alias) }}
+        {% if not loop.last %}, {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+{% endfor %}
+
+{% endblock %}
