@@ -10,11 +10,17 @@
   {%- endif -%}
 {%- endmacro %}
 
-{% macro print_decorator(node) %}
+{% macro print_decorator(node) -%}
   @{{- print_form(node) -}}
 {%- endmacro %}
 
-{% macro print_call(node) %}
+{% macro print_attribute(node) -%}
+  {{- print_form(node.value) -}}
+  .
+  {{- node.attr -}}
+{%- endmacro %}
+
+{% macro print_call(node) -%}
   {{- print_form(node.func) -}}
   (
   {%- for arg in node.args -%}
@@ -24,7 +30,7 @@
   )
 {%- endmacro %}
 
-{% macro print_import(node) %}
+{% macro print_import(node) -%}
   <span class="python-keyword python-import">import</span>
   {%- for alias in node.names %}
     {{ print_alias(alias) }}
@@ -32,7 +38,7 @@
   {% endfor %}
 {%- endmacro %}
 
-{% macro print_import_from(node) %}
+{% macro print_import_from(node) -%}
   <span class="python-keyword python-import">from</span>
   <span class="python-name">{{ node.module }}</span>
   <span class="python-keyword python-import">import</span>
@@ -42,11 +48,42 @@
   {% endfor %}
 {%- endmacro %}
 
-{% macro print_function_def(node, indent) %}
-  {% for decorator in node.decorator_list %}
-    {{ print_decorator(decorator) }}
-  {% endfor %}
-  <br />
+{% macro print_assign(node) -%}
+  {{- print_form(node.targets[0]) }}
+  =
+  {{ print_form(node.value) -}}
+{%- endmacro %}
+
+{% macro print_pass() -%}
+  <span class="python-keyword python-pass">pass</span>
+{%- endmacro %}
+
+{% macro print_class_def(node, indent) -%}
+  {{- print_decorator_list(node, indent) -}}
+  <span class="python-keyword python-class">class</span>
+  <span class="python-name">{{ node.name }}</span>
+  {%- for base in node.bases -%}
+    {%- if loop.first %}({% endif -%}
+    {{- print_form(base) -}}
+    {%- if loop.last %}){% else %}, {% endif -%}
+  {%- endfor -%}
+  :
+  {{- print_block(node.body, indent + 1) -}}
+{%- endmacro %}
+
+{% macro print_decorator_list(node, indent) -%}
+  {%- for decorator in node.decorator_list -%}
+    <!-- We start off indented from print_form -->
+    {%- if not loop.first %}{{ print_offset(indent) }}{% endif -%}
+    {{- print_decorator(decorator) -}}
+    <br />
+  {%- endfor -%}
+  <!-- If we didn't print any decorators, we're still indented -->
+  {%- if node.decorator_list %}{{- print_offset(indent) -}}{% endif -%}
+{%- endmacro %}
+
+{% macro print_function_def(node, indent) -%}
+  {{- print_decorator_list(node, indent) -}}
   <span class="python-keyword python-def">def</span>
   <span class="python-name">{{ node.name }}</span>(
   {%- for arg in node.args.args -%}
@@ -66,8 +103,16 @@
 {% macro print_form(node) %}
   {%- if node.node_type == 'Expr' -%}
     {{- print_form(node.value) -}}
+  {%- elif node.node_type == 'Pass' -%}
+    {{- print_pass() -}}
+  {%- elif node.node_type == 'Attribute' -%}
+    {{- print_attribute(node) -}}
   {%- elif node.node_type == 'Call' -%}
     {{- print_call(node) -}}
+  {%- elif node.node_type == 'Assign' -%}
+    {{- print_assign(node) -}}
+  {%- elif node.node_type == 'NameConstant' -%}
+    {{- print_name_constant(node) -}}
   {%- elif node.node_type == 'Num' -%}
     <span class="python-number">{{ node.n }}</span>
   {%- elif node.node_type == 'Str' -%}
@@ -80,7 +125,7 @@
     <span class="python-return">return</span>
     {%- if node.value %} {{ print_form(node.value) }}{% endif -%}
   {%- else -%}
-    ???{{ node.node_type }}
+    ?{{ node.node_type }}?
   {%- endif -%}
 {%- endmacro %}
 
@@ -100,6 +145,8 @@
         {{- print_import(node) -}}
       {%- elif node.node_type == 'ImportFrom' -%}
         {{- print_import_from(node) -}}
+      {%- elif node.node_type == 'ClassDef' -%}
+        {{- print_class_def(node, indent) -}}
       {%- elif node.node_type == 'FunctionDef' -%}
         {{- print_function_def(node, indent) -}}
       {%- else -%}
@@ -107,6 +154,12 @@
       {%- endif -%}
     </div>
   {% endfor %}
+{%- endmacro %}
+
+{% macro print_name_constant(node) -%}
+  <span class="python-keyword python-name-constant python-{{ node.value | lower }}">
+    {{- node.value -}}
+  </span>
 {%- endmacro %}
 
 {% macro print_offset(indent_level) %}
