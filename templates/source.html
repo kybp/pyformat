@@ -10,30 +10,38 @@
   {%- endif -%}
 {% endmacro %}
 
+{% macro print_import(node) %}
+  <span class="python-keyword python-import">import</span>
+  {% for alias in node.names %}
+    {{ print_alias(alias) }}
+    {%- if not loop.last %}, {% endif %}
+  {% endfor %}
+{% endmacro %}
+
+{% macro print_import_from(node) %}
+  <span class="python-keyword python-import">from</span>
+  <span class="python-name">{{ node.module }}</span>
+  <span class="python-keyword python-import"> import </span>
+  {% for alias in node.names %}
+    {{ print_alias(alias) }}
+    {%- if not loop.last %}, {% endif %}
+  {% endfor %}
+{% endmacro %}
+
 {% block body %}
 
 {% include "color-config.html" %}
 
 <div class="python-source">
-{% for node in ast %}
-  <div class="python-line">
-    {% if node.node_type == 'Import' %}
-      <span class="python-keyword python-import">import</span>
-      {% for alias in node.names %}
-        {{ print_alias(alias) }}
-        {%- if not loop.last %}, {% endif %}
-      {% endfor %}
-
-    {% elif node.node_type == 'ImportFrom' %}
-      <span class="python-keyword python-from">from</span>
-      <span class="python-name">{{ node.module }}</span>
-      <span class="python-keyword python-import"> import </span>
-      {% for alias in node.names %}
-        {{ print_alias(alias) }}
-        {%- if not loop.last %}, {% endif %}
-      {% endfor %}
-    {% endif %}
-  </div>
-{% endfor %}
+  {% for node in ast %}
+    <div class="python-line">
+      {% if node.node_type == 'Import' %}
+        {{ print_import(node) }}
+      {% elif node.node_type == 'ImportFrom' %}
+        {{ print_import_from(node) }}
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
 
 {% endblock %}
