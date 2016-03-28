@@ -28,6 +28,21 @@
   {% endfor %}
 {% endmacro %}
 
+{% macro print_function_def(node) %}
+  {% for decorator in node.decorator_list %}
+    {{ print_decorator(decorator) }}
+  {% endfor %}
+  <span class="python-keyword python-def">def</span>
+  <span class="python-name">{{ node.name }}</span>
+  {%- for arg in node.args.args %}
+    {% if loop.first %}({% endif -%}
+    <span class="python-name">{{ arg.arg }}</span>
+    {%- if loop.last %}){% else %}, {% endif %}
+  {% endfor -%}
+  :
+  <!-- TODO: print function body -->
+{% endmacro %}
+
 {% block body %}
 
 {% include "color-config.html" %}
@@ -39,6 +54,8 @@
         {{ print_import(node) }}
       {% elif node.node_type == 'ImportFrom' %}
         {{ print_import_from(node) }}
+      {% elif node.node_type == 'FunctionDef' %}
+        {{ print_function_def(node) }}
       {% endif %}
     </div>
   {% endfor %}
