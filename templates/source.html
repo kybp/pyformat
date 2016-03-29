@@ -119,6 +119,12 @@
   {{ print_form(node.right) }}
 {%- endmacro %}
 
+{% macro print_compare(node) -%}
+  {{ print_form(node.left) }}
+  {{ print_op(node.ops[0]) }}
+  {{ print_form(node.comparators[0]) }}
+{%- endmacro %}
+
 {% macro print_form(node) %}
   {%- if node.node_type == 'Expr' -%}
     {{- print_form(node.value) -}}
@@ -128,6 +134,8 @@
     {{- print_attribute(node) -}}
   {%- elif node.node_type == 'Call' -%}
     {{- print_call(node) -}}
+  {%- elif node.node_type == 'Compare' -%}
+    {{- print_compare(node) -}}
   {%- elif node.node_type == 'IfExp' -%}
     {{- print_if_exp(node) -}}
   {%- elif node.node_type == 'Assign' -%}
@@ -155,6 +163,16 @@
     +
   {% elif node.node_type == 'Mult' %}
     *
+  {% elif node.node_type == 'Eq' %}
+    ==
+  {% elif node.node_type == 'Lt' %}
+    <
+  {% elif node.node_type == 'Gt' %}
+    >
+  {% elif node.node_type == 'LtE' %}
+    <=
+  {% elif node.node_type == 'GtE' %}
+    >=
   {% endif %}
 {%- endmacro %}
 
