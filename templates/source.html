@@ -25,7 +25,7 @@
   (
   {%- for arg in node.args -%}
     {{- print_form(arg) -}}
-    {%- if not loop.last -%},{% endif -%}
+    {%- if not loop.last -%}, {% endif -%}
   {%- endfor -%}
   )
 {%- endmacro %}
@@ -88,7 +88,7 @@
   <span class="python-name">{{ node.name }}</span>(
   {%- for arg in node.args.args -%}
     <span class="python-name">{{ arg.arg }}</span>
-    {%- if not loop.last %},{% endif -%}
+    {%- if not loop.last %}, {% endif -%}
   {%- endfor -%}
   ):
   {{- print_block(node.body, indent + 1) -}}
@@ -112,6 +112,15 @@
   {{ print_form(node.test) }}
   <span class="python-keyword python-else">else</span>
   {{ print_form(node.orelse) }}
+{%- endmacro %}
+
+{% macro print_list(node) -%}
+  [
+  {%- for elt in node.elts -%}
+    {{- print_form(elt) -}}
+    {%- if not loop.last %}, {% endif -%}
+  {%- endfor -%}
+  ]
 {%- endmacro %}
 
 {% macro print_binop(node) -%}
@@ -145,6 +154,8 @@
     {{- print_form(node.value) -}}
   {%- elif node.node_type == 'BoolOp' -%}
     {{- print_bool_op(node) -}}
+  {%- elif node.node_type == 'List' -%}
+    {{- print_list(node) -}}
   {%- elif node.node_type == 'Pass' -%}
     {{- print_pass() -}}
   {%- elif node.node_type == 'Attribute' -%}
