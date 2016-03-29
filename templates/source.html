@@ -123,6 +123,17 @@
   ]
 {%- endmacro %}
 
+{% macro print_dict(node) -%}
+  {
+  {%- for i in range(node['keys'] | length) -%}
+    {{- print_form(node['keys'][i]) -}}
+    :
+    {{ print_form(node['values'][i]) -}}
+    {%- if not loop.last %}, {% endif -%}
+  {%- endfor -%}
+  }
+{%- endmacro %}
+
 {% macro print_binop(node) -%}
   {{ print_form(node.left) }}
   {{ print_op(node.op) }}
@@ -154,6 +165,8 @@
     {{- print_form(node.value) -}}
   {%- elif node.node_type == 'BoolOp' -%}
     {{- print_bool_op(node) -}}
+  {%- elif node.node_type == 'Dict' -%}
+    {{- print_dict(node) -}}
   {%- elif node.node_type == 'List' -%}
     {{- print_list(node) -}}
   {%- elif node.node_type == 'Pass' -%}
