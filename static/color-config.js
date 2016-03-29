@@ -9,6 +9,8 @@ $(function() {
     $(".python-name").css("color", $("#name-color").val());
     $(".python-name-constant").css("color", $("#name-constant-color").val());
     $(".python-None").css("color", $("#None-color").val());
+    $(".python-if").css("color", $("#if-color").val());
+    $(".python-else").css("color", $("#else-color").val());
     $(".python-false").css("color", $("#false-color").val());
     $(".python-true").css("color", $("#true-color").val());
     $(".python-number").css("color", $("#number-color").val());

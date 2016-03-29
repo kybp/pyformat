@@ -95,7 +95,25 @@
   <br />
 {%- endmacro %}
 
-{% macro print_binop(node) %}
+{% macro print_if(node, indent) -%}
+  <span class="python-keyword python-if">if</span>
+  {{ print_form(node.test) }}:
+  {{- print_block(node.body, indent + 1) -}}
+  {%- if node.orelse -%}
+    <span class="python-keyword python-else">else</span>:
+    {{ print_block(node.orelse, indent + 1) }}
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro print_if_exp(node) -%}
+  {{ print_form(node.body) }}
+  <span class="python-keyword python-if">if</span>
+  {{ print_form(node.test) }}
+  <span class="python-keyword python-else">else</span>
+  {{ print_form(node.orelse) }}
+{%- endmacro %}
+
+{% macro print_binop(node) -%}
   {{ print_form(node.left) }}
   {{ print_op(node.op) }}
   {{ print_form(node.right) }}
@@ -110,6 +128,8 @@
     {{- print_attribute(node) -}}
   {%- elif node.node_type == 'Call' -%}
     {{- print_call(node) -}}
+  {%- elif node.node_type == 'IfExp' -%}
+    {{- print_if_exp(node) -}}
   {%- elif node.node_type == 'Assign' -%}
     {{- print_assign(node) -}}
   {%- elif node.node_type == 'NameConstant' -%}
@@ -142,7 +162,9 @@
   {%- for node in block -%}
     <div class="python-line">
       {{- print_offset(indent) -}}
-      {%- if node.node_type == 'Import' -%}
+      {%- if node.node_type == 'If' -%}
+        {{- print_if(node, indent) -}}
+      {%- elif node.node_type == 'Import' -%}
         {{- print_import(node) -}}
       {%- elif node.node_type == 'ImportFrom' -%}
         {{- print_import_from(node) -}}
