@@ -100,6 +100,7 @@
   {{ print_form(node.test) }}:
   {{- print_block(node.body, indent + 1) -}}
   {%- if node.orelse -%}
+    {{- print_offset(indent) -}}
     <span class="python-keyword python-else">else</span>:
     {{ print_block(node.orelse, indent + 1) }}
   {%- endif -%}
