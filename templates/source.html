@@ -125,9 +125,25 @@
   {{ print_form(node.comparators[0]) }}
 {%- endmacro %}
 
+{% macro print_bool_op_op(node) -%}
+  {%- if node.node_type == 'Or' -%}
+    <span class="python-keyword python-or">or</span>
+  {%- elif node.node_type == 'And' -%}
+    <span class="python-keyword python-and">and</span>
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro print_bool_op(node) -%}
+  {{ print_form(node['values'][0]) }}
+  {{ print_bool_op_op(node.op) }}
+  {{ print_form(node['values'][1]) }}
+{%- endmacro %}
+
 {% macro print_form(node) %}
   {%- if node.node_type == 'Expr' -%}
     {{- print_form(node.value) -}}
+  {%- elif node.node_type == 'BoolOp' -%}
+    {{- print_bool_op(node) -}}
   {%- elif node.node_type == 'Pass' -%}
     {{- print_pass() -}}
   {%- elif node.node_type == 'Attribute' -%}

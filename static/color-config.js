@@ -13,6 +13,8 @@ $(function() {
     $(".python-else").css("color", $("#else-color").val());
     $(".python-false").css("color", $("#false-color").val());
     $(".python-true").css("color", $("#true-color").val());
+    $(".python-and").css("color", $("#and-color").val());
+    $(".python-or").css("color", $("#or-color").val());
     $(".python-number").css("color", $("#number-color").val());
     $(".python-pass").css("color", $("#pass-color").val());
     $(".python-string").css("color", $("#string-color").val());
