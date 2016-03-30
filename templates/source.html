@@ -134,6 +134,20 @@
   }
 {%- endmacro %}
 
+{% macro print_subscript(node) -%}
+  {{- print_form(node.value) -}}
+  [
+  {%- if node.slice.node_type == 'Index' -%}
+    {{ print_form(node.slice.value) -}}
+  {%- elif node.slice.node_type == 'Slice' -%}
+    {{- print_form(node.slice.lower) -}}
+    :
+    {{- print_form(node.slice.upper) -}}
+    {%- if node.slice.step %}:{{ print_form(node.slice.step) }}{% endif -%}
+  {%- endif -%}
+  ]
+{%- endmacro %}
+
 {% macro print_binop(node) -%}
   {{ print_form(node.left) }}
   {{ print_op(node.op) }}
@@ -161,7 +175,8 @@
 {%- endmacro %}
 
 {% macro print_form(node) %}
-  {%- if node.node_type == 'Expr' -%}
+  {%- if node is none -%}
+  {%- elif node.node_type == 'Expr' -%}
     {{- print_form(node.value) -}}
   {%- elif node.node_type == 'BoolOp' -%}
     {{- print_bool_op(node) -}}
@@ -169,6 +184,8 @@
     {{- print_dict(node) -}}
   {%- elif node.node_type == 'List' -%}
     {{- print_list(node) -}}
+  {%- elif node.node_type == 'Subscript' -%}
+    {{- print_subscript(node) -}}
   {%- elif node.node_type == 'Pass' -%}
     {{- print_pass() -}}
   {%- elif node.node_type == 'Attribute' -%}
