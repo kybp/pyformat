@@ -59,6 +59,7 @@
 {%- endmacro %}
 
 {% macro print_class_def(node, indent) -%}
+  <br />
   {{- print_decorator_list(node, indent) -}}
   <span class="python-keyword python-class">class</span>
   <span class="python-name">{{ node.name }}</span>
@@ -69,21 +70,21 @@
   {%- endfor -%}
   :
   {{- print_block(node.body, indent + 1) -}}
+  <br />
 {%- endmacro %}
 
 {% macro print_decorator_list(node, indent) -%}
   {%- for decorator in node.decorator_list -%}
-    <!-- We start off indented from print_form -->
-    {%- if not loop.first %}{{ print_offset(indent) }}{% endif -%}
+    {{- print_offset(indent) -}}
     {{- print_decorator(decorator) -}}
     <br />
   {%- endfor -%}
-  <!-- If we didn't print any decorators, we're still indented -->
-  {%- if node.decorator_list %}{{- print_offset(indent) -}}{% endif -%}
 {%- endmacro %}
 
 {% macro print_function_def(node, indent) -%}
+  <br />
   {{- print_decorator_list(node, indent) -}}
+  {{- print_offset(indent) -}}
   <span class="python-keyword python-def">def</span>
   <span class="python-name">{{ node.name }}</span>(
   {%- for arg in node.args.args -%}
@@ -92,10 +93,10 @@
   {%- endfor -%}
   ):
   {{- print_block(node.body, indent + 1) -}}
-  <br />
 {%- endmacro %}
 
 {% macro print_if(node, indent) -%}
+  {%- if indent == 0 %}<br />{% endif -%}
   <span class="python-keyword python-if">if</span>
   {{ print_form(node.test) }}:
   {{- print_block(node.body, indent + 1) -}}
@@ -237,18 +238,21 @@
 {% macro print_block(block, indent) %}
   {%- for node in block -%}
     <div class="python-line">
-      {{- print_offset(indent) -}}
       {%- if node.node_type == 'If' -%}
+        {{- print_offset(indent) -}}
         {{- print_if(node, indent) -}}
       {%- elif node.node_type == 'Import' -%}
+        {{- print_offset(indent) -}}
         {{- print_import(node) -}}
       {%- elif node.node_type == 'ImportFrom' -%}
+        {{- print_offset(indent) -}}
         {{- print_import_from(node) -}}
       {%- elif node.node_type == 'ClassDef' -%}
         {{- print_class_def(node, indent) -}}
       {%- elif node.node_type == 'FunctionDef' -%}
         {{- print_function_def(node, indent) -}}
       {%- else -%}
+        {{- print_offset(indent) -}}
         {{ print_form(node) }}
       {%- endif -%}
     </div>
@@ -261,7 +265,7 @@
   </span>
 {%- endmacro %}
 
-{% macro print_offset(indent_level) %}
+{% macro print_offset(indent_level) -%}
 {% for i in range(indent_level) %}&nbsp;{% endfor %}
 {%- endmacro %}
 
