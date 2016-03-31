@@ -256,8 +256,16 @@
 {% macro print_op(node) %}
   {%- if node.node_type == 'Add' %}
     +
+  {% elif node.node_type == 'Sub' %}
+    -
   {% elif node.node_type == 'Mult' %}
     *
+  {% elif node.node_type == 'Div' %}
+    /
+  {% elif node.node_type == 'FloorDiv' %}
+    //
+  {% elif node.node_type == 'Mod' %}
+    %
   {% elif node.node_type == 'Eq' %}
     ==
   {% elif node.node_type == 'Lt' %}
