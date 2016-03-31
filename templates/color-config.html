@@ -1,3 +1,14 @@
+{% macro color_section(name, class_name) -%}
+  <tr class="section">
+    <td colspan="3">{{ name }}</td>
+  </tr>
+  <tr>
+    <td>Default</td>
+    <td><input type="checkbox" id="{{ class_name }}-is-set" checked></td>
+    <td><input type="color" id="{{ class_name }}-color"></td>
+  </tr>
+{%- endmacro %}
+
 {% macro color_option(name) -%}
   <tr>
     <td>{{ name }}</td>
@@ -8,25 +19,41 @@
 
 <form class="color-config">
   <table border="1">
-    {{ color_option("Keyword") }}
-    {{ color_option("class") }}
+    {{ color_option("Names") }}
+
+    {{ color_section("Keywords", "keyword") }}
     {{ color_option("def") }}
-    {{ color_option("import") }}
-    {{ color_option("for") }}
-    {{ color_option("while") }}
-    {{ color_option("if") }}
-    {{ color_option("else") }}
+    {{ color_option("class") }}
     {{ color_option("return") }}
     {{ color_option("pass") }}
-    {{ color_option("Name") }}
-    {{ color_option("Constant") }}
-    {{ color_option("True") }}
-    {{ color_option("False") }}
+
+    {{ color_section("Modules", "module") }}
+    {{ color_option("import") }}
+    {{ color_option("from") }}
+    {{ color_option("as") }}
+
+    {{ color_section("Loops", "loop") }}
+    {{ color_option("for") }}
+    {{ color_option("in") }}
+    {{ color_option("while") }}
+
+    {{ color_section("Conditionals", "conditional") }}
+    {{ color_option("if") }}
+    {{ color_option("elif") }}
+    {{ color_option("else") }}
+
+    {{ color_section("Boolean Operators", "bool-op") }}
     {{ color_option("and") }}
     {{ color_option("or") }}
-    {{ color_option("None") }}
+
+    {{ color_section("Literals", "literal") }}
     {{ color_option("Number") }}
     {{ color_option("String") }}
+
+    {{ color_section("Constants", "constant") }}
+    {{ color_option("True") }}
+    {{ color_option("False") }}
+    {{ color_option("None") }}
   </table>
   <input type="button" value="Update" id="updateColors">
 </form>

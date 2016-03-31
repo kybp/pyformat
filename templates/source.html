@@ -3,7 +3,7 @@
 {% macro print_alias(alias) %}
   {%- if alias.asname -%}
     <span class="python-name">{{- alias.name -}}</span>
-    <span class="python-keyword python-import">as</span>
+    <span class="python-keyword python-module python-as">as</span>
     <span class="python-name">{{- alias.asname -}}</span>
   {%- else -%}
     <span class="python-name">{{- alias.name -}}</span>
@@ -31,7 +31,7 @@
 {%- endmacro %}
 
 {% macro print_import(node) -%}
-  <span class="python-keyword python-import">import</span>
+  <span class="python-keyword python-module python-import">import</span>
   {%- for alias in node.names %}
     {{ print_alias(alias) }}
     {%- if not loop.last %}, {% endif %}
@@ -39,9 +39,9 @@
 {%- endmacro %}
 
 {% macro print_import_from(node) -%}
-  <span class="python-keyword python-import">from</span>
+  <span class="python-keyword python-module python-from">from</span>
   <span class="python-name">{{ node.module }}</span>
-  <span class="python-keyword python-import">import</span>
+  <span class="python-keyword python-module python-import">import</span>
   {% for alias in node.names %}
     {{ print_alias(alias) }}
     {%- if not loop.last %}, {% endif %}
@@ -107,7 +107,7 @@
 
 {% macro print_while(node, indent) -%}
   {%- if indent == 0 %}<br />{% endif -%}
-  <span class="python-keyword python-while">while</span>
+  <span class="python-keyword python-loop python-while">while</span>
   {{ print_form(node.test) -}}
   :
   {{- print_block(node.body, indent + 1) -}}
@@ -117,16 +117,16 @@
 {% macro maybe_print_else(node_list, indent) -%}
   {%- if node_list -%}
     {{- print_offset(indent) -}}
-    <span class="python-keyword python-else">else</span>:
+    <span class="python-keyword python-conditional python-else">else</span>:
     {{ print_block(node_list, indent + 1) }}
   {%- endif -%}
 {%- endmacro %}
 
 {% macro print_for(node, indent) -%}
   {%- if indent == 0 %}<br />{% endif -%}
-  <span class="python-keyword python-for">for</span>
+  <span class="python-keyword python-loop python-for">for</span>
   {{ print_form(node.target) }}
-  <span class="python-keyword python-for">in</span>
+  <span class="python-keyword python-loop python-in">in</span>
   {{ print_form(node.iter) -}}
   :
   {{- print_block(node.body, indent + 1) -}}
@@ -135,7 +135,7 @@
 
 {% macro print_if(node, indent) -%}
   {%- if indent == 0 %}<br />{% endif -%}
-  <span class="python-keyword python-if">if</span>
+  <span class="python-keyword python-conditional python-if">if</span>
   {{ print_form(node.test) }}:
   {{- print_block(node.body, indent + 1) -}}
   {{- maybe_print_elif_else(node.orelse, indent) -}}
@@ -144,7 +144,7 @@
 {% macro maybe_print_elif_else(node_list, indent) -%}
   {%- if node_list | length == 1 and node_list[0].node_type == 'If' -%}
     {{- print_offset(indent) -}}
-    <span class="python-keyword python-elif">elif</span>
+    <span class="python-keyword python-conditional python-elif">elif</span>
     {{ print_form(node_list[0].test) }}:
     {{- print_block(node_list[0].body, indent + 1) -}}
     {{- maybe_print_elif_else(node_list[0].orelse, indent) -}}
@@ -155,9 +155,9 @@
 
 {% macro print_if_exp(node) -%}
   {{ print_form(node.body) }}
-  <span class="python-keyword python-if">if</span>
+  <span class="python-keyword python-conditional python-if">if</span>
   {{ print_form(node.test) }}
-  <span class="python-keyword python-else">else</span>
+  <span class="python-keyword python-conditional python-else">else</span>
   {{ print_form(node.orelse) }}
 {%- endmacro %}
 
@@ -209,9 +209,9 @@
 
 {% macro print_bool_op_op(node) -%}
   {%- if node.node_type == 'Or' -%}
-    <span class="python-keyword python-or">or</span>
+    <span class="python-keyword python-bool-op python-or">or</span>
   {%- elif node.node_type == 'And' -%}
-    <span class="python-keyword python-and">and</span>
+    <span class="python-keyword python-bool-op python-and">and</span>
   {%- endif -%}
 {%- endmacro %}
 
@@ -250,15 +250,15 @@
   {%- elif node.node_type == 'NameConstant' -%}
     {{- print_name_constant(node) -}}
   {%- elif node.node_type == 'Num' -%}
-    <span class="python-number">{{ node.n }}</span>
+    <span class="python-literal python-number">{{ node.n }}</span>
   {%- elif node.node_type == 'Str' -%}
-    <span class="python-string">'{{ node.s }}'</span>
+    <span class="python-literal python-string">'{{ node.s }}'</span>
   {%- elif node.node_type == 'Name' -%}
-    <span class="python-name">{{ node.id }}</span>
+    <span class="python-literal python-name">{{ node.id }}</span>
   {%- elif node.node_type == 'BinOp' -%}
     {{ print_binop(node) }}
   {%- elif node.node_type == 'Return' -%}
-    <span class="python-return">return</span>
+    <span class="python-keyword python-return">return</span>
     {%- if node.value %} {{ print_form(node.value) }}{% endif -%}
   {%- else -%}
     ?{{ node.node_type }}?
