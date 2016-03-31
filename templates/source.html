@@ -117,7 +117,7 @@
 {% macro maybe_print_else(node_list, indent) -%}
   {%- if node_list -%}
     {{- print_offset(indent) -}}
-    <span class="python-keyword python-else">else</span>
+    <span class="python-keyword python-else">else</span>:
     {{ print_block(node_list, indent + 1) }}
   {%- endif -%}
 {%- endmacro %}
@@ -130,11 +130,7 @@
   {{ print_form(node.iter) -}}
   :
   {{- print_block(node.body, indent + 1) -}}
-  {%- if node.orelse -%}
-    {{- print_offset(indent) -}}
-    <span class="python-keyword python-else">else</span>
-    {{ print_block(node.orelse, indent + 1) }}
-  {%- endif -%}
+  {{- maybe_print_else(node.orelse, indent) -}}  
 {%- endmacro %}
 
 {% macro print_if(node, indent) -%}
@@ -142,11 +138,7 @@
   <span class="python-keyword python-if">if</span>
   {{ print_form(node.test) }}:
   {{- print_block(node.body, indent + 1) -}}
-  {%- if node.orelse -%}
-    {{- print_offset(indent) -}}
-    <span class="python-keyword python-else">else</span>:
-    {{ print_block(node.orelse, indent + 1) }}
-  {%- endif -%}
+  {{- maybe_print_else(node.orelse, indent) -}}
 {%- endmacro %}
 
 {% macro print_if_exp(node) -%}
