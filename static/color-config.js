@@ -1,59 +1,60 @@
-$(function() {
-  var updateColor = function(name) {
-    var checkbox = $("#" + name + "-is-set");
-    var elements = $(".python-" + name);
+var updateColor = function(name) {
+  var checkbox = $("#" + name + "-is-set");
+  var elements = $(".python-" + name);
 
-    if (checkbox.is(":checked")) {
-      if (checkbox.parent().hasClass("ignore")) {
-        elements.css("color", $("#default-color").val());
-      } else {
-        elements.css("color", $("#" + name + "-color").val());
-      }
+  if (checkbox.is(":checked")) {
+    if (checkbox.parent().hasClass("ignore")) {
+      elements.css("color", $("#default-color").val());
+    } else {
+      elements.css("color", $("#" + name + "-color").val());
     }
-  };
+  }
+};
 
-  var updateAllColors = function() {
-    $(".python-source").css("color", $("#default-color").val())
-    $(".python-source").css("background-color", $("#background-color").val())
 
-    updateColor("keyword");
-    updateColor("def");
-    updateColor("class");
-    updateColor("return");
+var updateAllColors = function() {
+  $(".python-source").css("color", $("#default-color").val())
+  $(".python-source").css("background-color", $("#background-color").val())
 
-    updateColor("name");
+  updateColor("keyword");
+  updateColor("def");
+  updateColor("class");
+  updateColor("return");
 
-    updateColor("module");
-    updateColor("import");
-    updateColor("from");
-    updateColor("as");
+  updateColor("name");
 
-    updateColor("loop");
-    updateColor("for");
-    updateColor("in");
-    updateColor("while");
+  updateColor("module");
+  updateColor("import");
+  updateColor("from");
+  updateColor("as");
 
-    updateColor("conditional");
-    updateColor("if");
-    updateColor("elif");
-    updateColor("else");
+  updateColor("loop");
+  updateColor("for");
+  updateColor("in");
+  updateColor("while");
 
-    updateColor("bool-op")
-    updateColor("and");
-    updateColor("or");
+  updateColor("conditional");
+  updateColor("if");
+  updateColor("elif");
+  updateColor("else");
 
-    updateColor("constant")
-    updateColor("true");
-    updateColor("false");
-    updateColor("none");
+  updateColor("bool-op")
+  updateColor("and");
+  updateColor("or");
 
-    updateColor("literal");
-    updateColor("constant");
-    updateColor("number");
-    updateColor("pass");
-    updateColor("string");
-  };
+  updateColor("constant")
+  updateColor("true");
+  updateColor("false");
+  updateColor("none");
 
+  updateColor("literal");
+  updateColor("constant");
+  updateColor("number");
+  updateColor("pass");
+  updateColor("string");
+};
+
+$(function() {
   $("#updateColors").click(updateAllColors);
 
   $("tr.section").children().children("[type=checkbox]").click(function() {
@@ -70,4 +71,6 @@ $(function() {
 
   $("tr.section").nextUntil("tr.section").toggle();
   updateAllColors();
+
+  $("div.python-line:empty").remove();
 });
