@@ -95,6 +95,21 @@
   {{- print_block(node.body, indent + 1) -}}
 {%- endmacro %}
 
+{% macro print_for(node, indent) -%}
+  {%- if indent == 0 %}<br />{% endif -%}
+  <span class="python-keyword python-for">for</span>
+  {{ print_form(node.target) }}
+  <span class="python-keyword python-for">in</span>
+  {{ print_form(node.iter) -}}
+  :
+  {{- print_block(node.body, indent + 1) -}}
+  {%- if node.orelse -%}
+    {{- print_offset(indent) -}}
+    <span class="python-keyword python-else">else</span>
+    {{ print_block(node.orelse, indent + 1) }}
+  {%- endif -%}
+{%- endmacro %}
+
 {% macro print_if(node, indent) -%}
   {%- if indent == 0 %}<br />{% endif -%}
   <span class="python-keyword python-if">if</span>
@@ -241,6 +256,9 @@
       {%- if node.node_type == 'If' -%}
         {{- print_offset(indent) -}}
         {{- print_if(node, indent) -}}
+      {%- elif node.node_type == 'For' -%}
+        {{- print_offset(indent) -}}
+        {{- print_for(node, indent) -}}
       {%- elif node.node_type == 'Import' -%}
         {{- print_offset(indent) -}}
         {{- print_import(node) -}}
@@ -266,7 +284,7 @@
 {%- endmacro %}
 
 {% macro print_offset(indent_level) -%}
-{% for i in range(indent_level) %}&nbsp;{% endfor %}
+{% for i in range(indent_level * 4) %}&nbsp;{% endfor %}
 {%- endmacro %}
 
 {% block body %}
