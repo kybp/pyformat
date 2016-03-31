@@ -95,6 +95,16 @@
   {{- print_block(node.body, indent + 1) -}}
 {%- endmacro %}
 
+{% macro print_tuple(node) -%}
+  (
+  {%- for elt in node.elts -%}
+    {{- print_form(elt) -}}
+    {%- if loop.first and loop.last -%},
+    {%- elif not loop.last -%}, {% endif -%}
+  {%- endfor -%}
+  )
+{%- endmacro %}
+
 {% macro print_for(node, indent) -%}
   {%- if indent == 0 %}<br />{% endif -%}
   <span class="python-keyword python-for">for</span>
@@ -194,6 +204,8 @@
   {%- if node is none -%}
   {%- elif node.node_type == 'Expr' -%}
     {{- print_form(node.value) -}}
+  {%- elif node.node_type == 'Tuple' -%}
+    {{- print_tuple(node) -}}
   {%- elif node.node_type == 'BoolOp' -%}
     {{- print_bool_op(node) -}}
   {%- elif node.node_type == 'Dict' -%}
