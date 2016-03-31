@@ -10,6 +10,7 @@ $(function() {
     $(".python-name-constant").css("color", $("#name-constant-color").val());
     $(".python-None").css("color", $("#None-color").val());
     $(".python-for").css("color", $("#for-color").val());
+    $(".python-while").css("color", $("#while-color").val());
     $(".python-if").css("color", $("#if-color").val());
     $(".python-else").css("color", $("#else-color").val());
     $(".python-false").css("color", $("#false-color").val());
