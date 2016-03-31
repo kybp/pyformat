@@ -143,6 +143,7 @@
 
 {% macro maybe_print_elif_else(node_list, indent) -%}
   {%- if node_list | length == 1 and node_list[0].node_type == 'If' -%}
+    {{- print_offset(indent) -}}
     <span class="python-keyword python-elif">elif</span>
     {{ print_form(node_list[0].test) }}:
     {{- print_block(node_list[0].body, indent + 1) -}}
