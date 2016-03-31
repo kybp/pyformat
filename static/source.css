@@ -1,5 +1,12 @@
 div.python-source {
     font-family: courier;
+    font-size: 16px;
+    border: 1px solid black;
+    padding: 10px;
+}
+
+div.python-line + div.empty-line {
+    margin-top: 16px;
 }
 
 span.python-keyword {

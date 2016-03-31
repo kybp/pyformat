@@ -1,5 +1,13 @@
 {% extends "layout.html" %}
 
+{% macro new_line() -%}
+  </div><div class="python-line">
+{%- endmacro %}
+
+{% macro blank_line() -%}
+  </div><div class="empty-line"></div><div class="python-line">
+{%- endmacro %}
+
 {% macro print_alias(alias) %}
   {%- if alias.asname -%}
     <span class="python-name">{{- alias.name -}}</span>
@@ -59,7 +67,7 @@
 {%- endmacro %}
 
 {% macro print_class_def(node, indent) -%}
-  <br />
+  {{- blank_line() -}}
   {{- print_decorator_list(node, indent) -}}
   <span class="python-keyword python-class">class</span>
   <span class="python-name">{{ node.name }}</span>
@@ -70,19 +78,19 @@
   {%- endfor -%}
   :
   {{- print_block(node.body, indent + 1) -}}
-  <br />
+  {{- blank_line() -}}
 {%- endmacro %}
 
 {% macro print_decorator_list(node, indent) -%}
   {%- for decorator in node.decorator_list -%}
     {{- print_offset(indent) -}}
     {{- print_decorator(decorator) -}}
-    <br />
+    {{- new_line() -}}
   {%- endfor -%}
 {%- endmacro %}
 
 {% macro print_function_def(node, indent) -%}
-  <br />
+  {{- blank_line() -}}
   {{- print_decorator_list(node, indent) -}}
   {{- print_offset(indent) -}}
   <span class="python-keyword python-def">def</span>
@@ -106,7 +114,7 @@
 {%- endmacro %}
 
 {% macro print_while(node, indent) -%}
-  {%- if indent == 0 %}<br />{% endif -%}
+  {%- if indent == 0 %}{{- new_line() -}}{{- new_line() -}}{% endif -%}
   <span class="python-keyword python-loop python-while">while</span>
   {{ print_form(node.test) -}}
   :
@@ -123,7 +131,7 @@
 {%- endmacro %}
 
 {% macro print_for(node, indent) -%}
-  {%- if indent == 0 %}<br />{% endif -%}
+  {%- if indent == 0 %}{{- new_line() -}}{{- new_line() -}}{% endif -%}
   <span class="python-keyword python-loop python-for">for</span>
   {{ print_form(node.target) }}
   <span class="python-keyword python-loop python-in">in</span>
@@ -134,7 +142,7 @@
 {%- endmacro %}
 
 {% macro print_if(node, indent) -%}
-  {%- if indent == 0 %}<br />{% endif -%}
+  {%- if indent == 0 %}{{- new_line() -}}{{- new_line() -}}{% endif -%}
   <span class="python-keyword python-conditional python-if">if</span>
   {{ print_form(node.test) }}:
   {{- print_block(node.body, indent + 1) -}}
