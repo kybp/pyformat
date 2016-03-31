@@ -24,8 +24,7 @@
 
 {% macro print_attribute(node) -%}
   {{- print_form(node.value) -}}
-  .
-  {{- node.attr -}}
+  .<span class="python-name">{{- node.attr -}}</span>
 {%- endmacro %}
 
 {% macro print_call(node) -%}
@@ -262,7 +261,7 @@
   {%- elif node.node_type == 'Str' -%}
     <span class="python-literal python-string">'{{ node.s }}'</span>
   {%- elif node.node_type == 'Name' -%}
-    <span class="python-literal python-name">{{ node.id }}</span>
+    <span class="python-name">{{ node.id }}</span>
   {%- elif node.node_type == 'BinOp' -%}
     {{ print_binop(node) }}
   {%- elif node.node_type == 'Return' -%}
