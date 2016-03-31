@@ -138,7 +138,18 @@
   <span class="python-keyword python-if">if</span>
   {{ print_form(node.test) }}:
   {{- print_block(node.body, indent + 1) -}}
-  {{- maybe_print_else(node.orelse, indent) -}}
+  {{- maybe_print_elif_else(node.orelse, indent) -}}
+{%- endmacro %}
+
+{% macro maybe_print_elif_else(node_list, indent) -%}
+  {%- if node_list | length == 1 and node_list[0].node_type == 'If' -%}
+    <span class="python-keyword python-elif">elif</span>
+    {{ print_form(node_list[0].test) }}:
+    {{- print_block(node_list[0].body, indent + 1) -}}
+    {{- maybe_print_elif_else(node_list[0].orelse, indent) -}}
+  {%- else -%}
+    {{- maybe_print_else(node_list, indent) -}}
+  {%- endif -%}
 {%- endmacro %}
 
 {% macro print_if_exp(node) -%}
