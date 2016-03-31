@@ -113,7 +113,7 @@
 {%- endmacro %}
 
 {% macro print_while(node, indent) -%}
-  {%- if indent == 0 %}{{- new_line() -}}{{- new_line() -}}{% endif -%}
+  {%- if indent == 0 %}{{- blank_line() -}}{% endif -%}
   <span class="python-keyword python-loop python-while">while</span>
   {{ print_form(node.test) -}}
   :
@@ -130,7 +130,7 @@
 {%- endmacro %}
 
 {% macro print_for(node, indent) -%}
-  {%- if indent == 0 %}{{- new_line() -}}{{- new_line() -}}{% endif -%}
+  {%- if indent == 0 %}{{- blank_line() -}}{% endif -%}
   <span class="python-keyword python-loop python-for">for</span>
   {{ print_form(node.target) }}
   <span class="python-keyword python-loop python-in">in</span>
@@ -141,7 +141,7 @@
 {%- endmacro %}
 
 {% macro print_if(node, indent) -%}
-  {%- if indent == 0 %}{{- new_line() -}}{{- new_line() -}}{% endif -%}
+  {%- if indent == 0 %}{{- blank_line() -}}{% endif -%}
   <span class="python-keyword python-conditional python-if">if</span>
   {{ print_form(node.test) }}:
   {{- print_block(node.body, indent + 1) -}}
@@ -273,29 +273,7 @@
 {%- endmacro %}
 
 {% macro print_op(node) %}
-  {%- if node.node_type == 'Add' %}
-    +
-  {% elif node.node_type == 'Sub' %}
-    -
-  {% elif node.node_type == 'Mult' %}
-    *
-  {% elif node.node_type == 'Div' %}
-    /
-  {% elif node.node_type == 'FloorDiv' %}
-    //
-  {% elif node.node_type == 'Mod' %}
-    %
-  {% elif node.node_type == 'Eq' %}
-    ==
-  {% elif node.node_type == 'Lt' %}
-    <
-  {% elif node.node_type == 'Gt' %}
-    >
-  {% elif node.node_type == 'LtE' %}
-    <=
-  {% elif node.node_type == 'GtE' %}
-    >=
-  {% endif %}
+  {{- node.node_type | op_name -}}
 {%- endmacro %}
 
 {% macro print_block(block, indent) %}
