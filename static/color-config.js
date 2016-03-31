@@ -1,11 +1,21 @@
 $(function() {
   var updateColor = function(name) {
-    if ($("#" + name + "-is-set").is(":checked")) {
-      $(".python-" + name).css("color", $("#" + name + "-color").val());
+    var checkbox = $("#" + name + "-is-set");
+    var elements = $(".python-" + name);
+
+    if (checkbox.is(":checked")) {
+      if (checkbox.parent().hasClass("ignore")) {
+        elements.css("color", $("#default-color").val());
+      } else {
+        elements.css("color", $("#" + name + "-color").val());
+      }
     }
   };
 
   var updateAllColors = function() {
+    $(".python-source").css("color", $("#default-color").val())
+    $(".python-source").css("background-color", $("#background-color").val())
+
     updateColor("keyword");
     updateColor("def");
     updateColor("class");
@@ -46,10 +56,15 @@ $(function() {
 
   $("#updateColors").click(updateAllColors);
 
-  $(".section").click(function() {
-    $(this).nextUntil("tr.section").slideToggle(0);
+  $("tr.section").children().children("[type=checkbox]").click(function() {
+    $(this).parent().parent().nextUntil("tr.section")
+      .children().toggleClass("ignore")
   });
 
-  $(".section").nextUntil("tr.section").slideToggle(0);
+  $("td.section-label").click(function() {
+    $(this).parent().nextUntil("tr.section").slideToggle(0);
+  });
+
+  $("tr.section").nextUntil("tr.section").slideToggle(0);
   updateAllColors();
 });

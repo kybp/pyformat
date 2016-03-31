@@ -1,24 +1,33 @@
 {% macro color_section(name, class_name) -%}
   <tr class="section">
-    <td colspan="3">{{ name }}</td>
+    <td colspan="2" class="section-label">{{ name }}</td>
+    <td><input type="checkbox" checked></td>
   </tr>
   <tr>
     <td>Default</td>
-    <td><input type="checkbox" id="{{ class_name }}-is-set" checked></td>
     <td><input type="color" id="{{ class_name }}-color"></td>
+    <td><input type="checkbox" id="{{ class_name }}-is-set" checked></td>
   </tr>
 {%- endmacro %}
 
 {% macro color_option(name) -%}
   <tr>
     <td>{{ name }}</td>
-    <td><input type="checkbox" id="{{ name | lower}}-is-set" checked></td>
     <td><input type="color" id="{{ name | lower }}-color"></td>
+    <td><input type="checkbox" id="{{ name | lower}}-is-set" checked></td>
   </tr>
 {%- endmacro %}
 
 <form class="color-config">
   <table border="1">
+    <tr>
+      <td>Default</td>
+      <td colspan="3"><input type="color" id="default-color"></td>
+    </tr>
+    <tr>
+      <td>Background</td>
+      <td colspan="3"><input type="color" id="background-color"></td>
+    </tr>
     {{ color_option("Names") }}
 
     {{ color_section("Keywords", "keyword") }}
