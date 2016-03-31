@@ -58,13 +58,16 @@ $(function() {
 
   $("tr.section").children().children("[type=checkbox]").click(function() {
     $(this).parent().parent().nextUntil("tr.section")
-      .children().toggleClass("ignore")
+      .children().toggleClass("ignore");
   });
 
   $("td.section-label").click(function() {
-    $(this).parent().nextUntil("tr.section").slideToggle(0);
+    $(this).parent().nextUntil("tr.section").toggle();
+    $(this).find('.expand-marker').text(function(_, value) {
+      return value == '+' ? '-' : '+';
+    });
   });
 
-  $("tr.section").nextUntil("tr.section").slideToggle(0);
+  $("tr.section").nextUntil("tr.section").toggle();
   updateAllColors();
 });

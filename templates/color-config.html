@@ -1,6 +1,7 @@
 {% macro color_section(name, class_name) -%}
   <tr class="section">
-    <td colspan="2" class="section-label">{{ name }}</td>
+    <td colspan="2" class="section-label">
+      [<span class="expand-marker">+</span>] {{ name }}</td>
     <td><input type="checkbox" checked></td>
   </tr>
   <tr>
@@ -14,7 +15,7 @@
   <tr>
     <td>{{ name }}</td>
     <td><input type="color" id="{{ name | lower }}-color"></td>
-    <td><input type="checkbox" id="{{ name | lower}}-is-set" checked></td>
+    <td><input type="checkbox" id="{{ name | lower}}-is-set"></td>
   </tr>
 {%- endmacro %}
 

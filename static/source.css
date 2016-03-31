@@ -16,3 +16,7 @@ span.python-keyword {
 span.python-import {
     color: #777;
 }
+
+span.expand-marker {
+    font-family: courier;
+}
