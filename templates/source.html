@@ -310,7 +310,7 @@
 {%- endmacro %}
 
 {% macro print_name_constant(node) -%}
-  <span class="python-keyword python-name-constant python-{{ node.value | lower }}">
+  <span class="python-keyword python-constant python-{{ node.value | lower }}">
     {{- node.value -}}
   </span>
 {%- endmacro %}

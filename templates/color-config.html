@@ -1,80 +1,32 @@
+{% macro color_option(name) -%}
+  <tr>
+    <td>{{ name }}</td>
+    <td><input type="checkbox" id="{{ name | lower}}-is-set" checked></td>
+    <td><input type="color" id="{{ name | lower }}-color"></td>
+  </tr>
+{%- endmacro %}
+
 <form class="color-config">
   <table border="1">
-    <tr>
-      <td>Keyword</td>
-      <td><input type="color" id="keyword-color"></td>
-    </tr>
-    <tr>
-      <td>class</td>
-      <td><input type="color" id="class-color"></td>
-    </tr>
-    <tr>
-      <td>def</td>
-      <td><input type="color" id="def-color"></td>
-    <tr>
-      <td>import/from</td>
-      <td><input type="color" id="import-color"></td>
-    </tr>
-    <tr>
-      <td>for</td>
-      <td><input type="color" id="for-color"></td>
-    </tr>
-    <tr>
-      <td>while</td>
-      <td><input type="color" id="while-color"></td>
-    </tr>
-    <tr>
-      <td>if</td>
-      <td><input type="color" id="if-color"></td>
-    </tr>
-    <tr>
-      <td>else</td>
-      <td><input type="color" id="else-color"></td>
-    </tr>
-    <tr>
-      <td>return</td>
-      <td><input type="color" id="return-color"></td>
-    </tr>
-    <tr>
-      <td>pass</td>
-      <td><input type="color" id="pass-color"></td>
-    </tr>
-    <tr>
-      <td>Name</td>
-      <td><input type="color" id="name-color"></td>
-    </tr>
-    <tr>
-      <td>Name Constant</td>
-      <td><input type="color" id="name-constant-color"></td>
-    </tr>
-    <tr>
-      <td>True</td>
-      <td><input type="color" id="true-color"></td>
-    </tr>
-    <tr>
-      <td>False</td>
-      <td><input type="color" id="false-color"></td>
-    </tr>
-    <tr>
-      <td>and</td>
-      <td><input type="color" id="and-color"></td>
-    </tr>
-    <tr>
-      <td>or</td>
-      <td><input type="color" id="or-color"></td>
-    </tr>
-    <tr>
-      <td>None</td>
-      <td><input type="color" id="none-color"></td>
-    </tr>
-    <tr>
-      <td>Number</td>
-      <td><input type="color" id="number-color"></td>
-    </tr>
-    <tr>
-      <td>String</td>
-      <td><input type="color" id="string-color"></td>
-    </tr>
+    {{ color_option("Keyword") }}
+    {{ color_option("class") }}
+    {{ color_option("def") }}
+    {{ color_option("import") }}
+    {{ color_option("for") }}
+    {{ color_option("while") }}
+    {{ color_option("if") }}
+    {{ color_option("else") }}
+    {{ color_option("return") }}
+    {{ color_option("pass") }}
+    {{ color_option("Name") }}
+    {{ color_option("Constant") }}
+    {{ color_option("True") }}
+    {{ color_option("False") }}
+    {{ color_option("and") }}
+    {{ color_option("or") }}
+    {{ color_option("None") }}
+    {{ color_option("Number") }}
+    {{ color_option("String") }}
   </table>
   <input type="button" value="Update" id="updateColors">
 </form>
