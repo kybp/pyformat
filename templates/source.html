@@ -318,6 +318,10 @@
 
 {% block body %}
 
+<script>
+  $save_url = "{{ url_for('save') }}"
+</script>
+
 <div class="python-source">
   {{ print_block(ast, 0) }}
 </div>

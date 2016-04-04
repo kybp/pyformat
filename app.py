@@ -1,5 +1,5 @@
 import ast
-from flask import Flask, render_template, request
+from flask import Flask, make_response, render_template, request
 
 class PythonParser(ast.NodeVisitor):
     def visit_Module(self, node):
@@ -48,6 +48,21 @@ def index():
 def format():
     ast = PythonParser.parse(request.form['source'] or '')
     return render_template('source.html', ast=ast)
+
+@app.route('/save', methods=['POST'])
+def save():
+    json = request.get_json()
+    response = make_response()
+
+    for key in request.cookies:
+        response.set_cookie(key, '', expires=0)
+
+    for name, color in json['colors'].items():
+        response.set_cookie(name, color)
+    for name in json['checked']:
+        response.set_cookie(name, 'checked')
+
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)

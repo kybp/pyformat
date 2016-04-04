@@ -11,6 +11,54 @@ var updateColor = function(name) {
   }
 };
 
+var loadColors = function(colors) {
+  $("[type=checkbox]").prop("checked", false);
+
+  var cookies = document.cookie.split(/; */);
+  if (cookies.length === 1 && cookies[0] === '') {
+    // default
+  } else {
+    $.each(cookies, function() {
+      var splitCookie = this.split('=');
+      var id  = splitCookie[0];
+      var val = splitCookie[1];
+      var element = $(document.getElementById(id));
+
+      if (val === "checked") {
+        console.log(this);
+        element.prop("checked", true);
+      } else {
+        element.val(val);
+      }
+    });
+  }
+
+  updateAllColors();
+}
+
+var saveColors = function() {
+  var checked = []
+  var colors = {}
+
+  colors['default-color'] = $("#default-color").val()
+  colors['background-color'] = $("#background-color").val()
+  $("[type=checkbox]").each(function(_, checkbox) {
+    var color_picker = $(checkbox).parent().parent().children().
+        children("[type=color]");
+    colors[color_picker.attr("id")] = color_picker.val();
+
+    if ($(checkbox).is(":checked")) {
+      checked.push($(checkbox).attr("id"));
+    } else console.log($(checkbox).attr("id") + " is not checked")
+  });
+
+  $.ajax({
+    type: "POST",
+    contentType: "application/json",
+    url: $save_url,
+    data: JSON.stringify({colors: colors, checked: checked})
+  });
+}
 
 var updateAllColors = function() {
   $(".python-source").css("color", $("#default-color").val())
@@ -55,6 +103,7 @@ var updateAllColors = function() {
 };
 
 $(function() {
+  $("#saveColors").click(saveColors);
   $("#updateColors").click(updateAllColors);
 
   $("tr.section").children().children("[type=checkbox]").click(function() {
@@ -70,7 +119,6 @@ $(function() {
   });
 
   $("tr.section").nextUntil("tr.section").toggle();
-  updateAllColors();
-
+  loadColors();
   $("div.python-line:empty").remove();
 });

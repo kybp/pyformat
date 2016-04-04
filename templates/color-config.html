@@ -2,7 +2,8 @@
   <tr class="section">
     <td colspan="2" class="section-label">
       [<span class="expand-marker">+</span>] {{ name }}</td>
-    <td><input type="checkbox" checked></td>
+    <td><input type="checkbox"
+               id="{{ class_name }}-section-is-set" checked></td>
   </tr>
   <tr>
     <td>Default</td>
@@ -69,5 +70,7 @@
     {{ color_option("False") }}
     {{ color_option("None") }}
   </table>
+
+  <input type="button" value="Save"   id="saveColors">
   <input type="button" value="Update" id="updateColors">
 </form>
