@@ -102,6 +102,26 @@
   {{- print_block(node.body, indent + 1) -}}
 {%- endmacro %}
 
+{% macro print_list_comp(node) -%}
+  [
+  {{- print_form(node.elt) }}
+  {% for generator in node.generators %}
+    {{ print_generator(generator) -}}
+  {%- endfor -%}
+  ]
+{%- endmacro %}
+
+{% macro print_generator(node) -%}
+  <span class="python-keyword python-loop python-for">for</span>
+  {{ print_form(node.target) }} 
+  <span class="python-keyword python-loop python-in">in</span>
+  {{ print_form(node.iter) }}
+  {%- for if_expr in node.ifs %}
+    <span class="python-keyword python-conditional python-if">if</span>
+    {{ print_form(if_expr) -}}
+  {%- endfor -%}
+{%- endmacro %}
+
 {% macro print_tuple(node) -%}
   (
   {%- for elt in node.elts -%}
@@ -252,6 +272,8 @@
     {%- else -%}
       {{- print_form(node.value) -}}
     {%- endif -%}
+  {%- elif node.node_type == 'ListComp' -%}
+    {{- print_list_comp(node) -}}
   {%- elif node.node_type == 'Tuple' -%}
     {{- print_tuple(node) -}}
   {%- elif node.node_type == 'BoolOp' -%}
