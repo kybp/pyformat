@@ -1,5 +1,6 @@
 import ast
 import random
+import re
 
 class CommentParser(ast.NodeVisitor):
     def visit_Module(self, node):
@@ -61,20 +62,27 @@ prefixed comment-strings.'''
             if source[i] == '"' or source[i] == "'":
                 j = index_after_string(source, i)
                 while i < j:
-                    line += source[j]
+                    line += source[i]
                     i += 1
             elif source[i] == '#':
-                # This will need to copy over leading whitespace from
-                # the line buffer first
-                output += "'{}".format(prefix)
+                output += re.match(r'\s*', line).group() + "'{}".format(prefix)
                 while i < len(source) and source[i] != '\n':
+                    if source[i] == "'" or source[i] == '\\':
+                        output += '\\'
                     output += source[i]
                     i += 1
-                output += "'\n"
-            else:
-                output += source[i]
+                if line == '':
+                    output += "'"
+                else:
+                    output += "'\n"
+            elif source[i] == '\n':
+                output += line.rstrip() + '\n'
+                line = ''
                 i += 1
-        return (prefix, output)
+            else:
+                line += source[i]
+                i += 1
+        return (prefix, output + line.rstrip())
 
 class PythonParser(ast.NodeVisitor):
     def visit_Module(self, node):

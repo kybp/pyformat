@@ -34,8 +34,30 @@ class TestCommentParser(unittest.TestCase):
         from pyformat.parser import CommentParser
         self.tag_comments = CommentParser.tag_comments
 
+    def test_echoes_non_comment(self, randint):
+        self.assertEqual(self.tag_comments('pass'), ('0', 'pass'))
+
     def test_prefixes_comment(self, randint):
-        self.assertEqual(self.tag_comments('# foo'), ('0', "'0# foo'\n"))
+        self.assertEqual(self.tag_comments('# foo'), ('0', "'0# foo'"))
+
+    def test_does_not_add_superfluous_newlines(self, randint):
+        _, out = self.tag_comments('# foo\n# bar\n')
+        self.assertEqual(out.count('\n'), 2)
+
+    def test_puts_eol_comment_on_preceding_line(self, randint):
+        self.assertEqual(self.tag_comments('pass # foo'),
+                         ('0', "'0# foo'\npass"))
+
+    def test_properly_indents_comment(self, randint):
+        self.assertEqual(self.tag_comments('if True:\n  pass # foo'),
+                         ('0', "if True:\n  '0# foo'\n  pass"))
+
+    def test_escapes_quotes_in_comment(self, randint):
+        self.assertEqual(self.tag_comments("#'foo'"), ('0', r"'0#\'foo\''"))
+
+    def test_escapes_backslashes_in_comments(self, randint):
+        self.assertEqual(self.tag_comments("#\\foo\\"),
+                         ('0', r"'0#\\foo\\'"))
 
 if __name__ == '__main__':
     unittest.main()
