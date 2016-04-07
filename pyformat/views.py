@@ -1,6 +1,6 @@
 from flask import Flask, make_response, render_template, request
-from formatter import app
-from formatter.parser import PythonParser
+from pyformat import app
+from pyformat.parser import PythonParser
 
 @app.route('/')
 def index():

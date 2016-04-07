@@ -20,4 +20,4 @@ def op_name_filter(op_name):
     }[op_name]
 app.jinja_env.filters['op_name'] = op_name_filter
 
-import formatter.views
+import pyformat.views
