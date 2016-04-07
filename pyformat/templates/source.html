@@ -18,6 +18,12 @@
   {%- endif -%}
 {%- endmacro %}
 
+{% macro print_comment(node) -%}
+  <span class="python-comment">
+    {{- node.s[comment_prefix|length:] -}}
+  </span>
+{%- endmacro %}
+
 {% macro print_decorator(node) -%}
   @{{- print_form(node) -}}
 {%- endmacro %}
@@ -231,7 +237,15 @@
 {% macro print_form(node) %}
   {%- if node is none -%}
   {%- elif node.node_type == 'Expr' -%}
-    {{- print_form(node.value) -}}
+    {%- if node.value.node_type == 'Str' -%}
+      {%- if node.value.s[:comment_prefix|length] == comment_prefix -%}
+        {{- print_comment(node.value) -}}
+      {%- else -%}
+        {{- print_form(node.value) -}}
+      {%- endif -%}
+    {%- else -%}
+      {{- print_form(node.value) -}}
+    {%- endif -%}
   {%- elif node.node_type == 'Tuple' -%}
     {{- print_tuple(node) -}}
   {%- elif node.node_type == 'BoolOp' -%}

@@ -1,3 +1,3 @@
-from formatter import app
+from pyformat import app
 
 app.run(debug=True)

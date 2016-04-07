@@ -43,6 +43,9 @@ class TestCommentParser(unittest.TestCase):
     def test_echoes_non_comment(self, randint):
         self.assertEqual(self.tag_comments('pass'), ('0', 'pass'))
 
+    def test_echoes_strings(self, randint):
+        self.assertEqual(self.tag_comments('"foo"'), ('0', '"foo"'))
+
     def test_prefixes_comment(self, randint):
         self.assertEqual(self.tag_comments('# foo'), ('0', "'0# foo'"))
 
@@ -64,6 +67,10 @@ class TestCommentParser(unittest.TestCase):
     def test_escapes_backslashes_in_comments(self, randint):
         self.assertEqual(self.tag_comments("#\\foo\\"),
                          ('0', r"'0#\\foo\\'"))
+
+    def test_discards_carriage_return(self, randint):
+        self.assertEqual(self.tag_comments('pass\r\npass'),
+                         ('0', 'pass\npass'))
 
 if __name__ == '__main__':
     unittest.main()

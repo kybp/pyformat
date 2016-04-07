@@ -54,13 +54,14 @@ string is unterminated, return len(source).'''
 generated so as not to conflict with any real strings in the
 source. Returns a tuple of the prefix and a string containing the
 prefixed comment-strings.'''
+        source = re.sub('\r', '', source)
         prefix = cls.get_safe_prefix(source)
         output = ''
         line   = ''
         i      = 0
         while i < len(source):
             if source[i] == '"' or source[i] == "'":
-                j = index_after_string(source, i)
+                j = cls.index_after_string(source, i)
                 while i < j:
                     line += source[i]
                     i += 1
@@ -101,4 +102,5 @@ class PythonParser(ast.NodeVisitor):
 
     @classmethod
     def parse(cls, source):
-        return cls().visit(ast.parse(source))
+        prefix, tagged = CommentParser.tag_comments(source)
+        return (prefix, cls().visit(ast.parse(tagged)))

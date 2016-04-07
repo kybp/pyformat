@@ -8,8 +8,8 @@ def index():
 
 @app.route('/format', methods=['POST'])
 def format():
-    ast = PythonParser.parse(request.form['source'] or '')
-    return render_template('source.html', ast=ast)
+    prefix, ast = PythonParser.parse(request.form['source'] or '')
+    return render_template('source.html', ast=ast, comment_prefix=prefix)
 
 @app.route('/save', methods=['POST'])
 def save():

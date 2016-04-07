@@ -85,6 +85,7 @@ var updateAllColors = function() {
   updateColor("return");
 
   updateColor("name");
+  updateColor("comment")
 
   updateColor("module");
   updateColor("import");
