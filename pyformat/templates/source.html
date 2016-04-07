@@ -61,12 +61,6 @@
   {% endfor %}
 {%- endmacro %}
 
-{% macro print_assign(node) -%}
-  {{- print_form(node.targets[0]) }}
-  =
-  {{ print_form(node.value) -}}
-{%- endmacro %}
-
 {% macro print_pass() -%}
   <span class="python-keyword python-pass">pass</span>
 {%- endmacro %}
@@ -208,16 +202,22 @@
   ]
 {%- endmacro %}
 
+{% macro print_assign(node) -%}
+  {{- print_form(node.targets[0]) }}
+  =
+  {{ print_form(node.value) -}}
+{%- endmacro %}
+
+{% macro print_augassign(node) -%}
+  {{- print_form(node.target) }}
+  {{ print_op(node.op) -}}=
+  {{ print_form(node.value) -}}
+{%- endmacro %}
+
 {% macro print_binop(node) -%}
   {{ print_form(node.left) }}
   {{ print_op(node.op) }}
   {{ print_form(node.right) }}
-{%- endmacro %}
-
-{% macro print_compare(node) -%}
-  {{ print_form(node.left) }}
-  {{ print_op(node.ops[0]) }}
-  {{ print_form(node.comparators[0]) }}
 {%- endmacro %}
 
 {% macro print_bool_op_op(node) -%}
@@ -232,6 +232,12 @@
   {{ print_form(node['values'][0]) }}
   {{ print_bool_op_op(node.op) }}
   {{ print_form(node['values'][1]) }}
+{%- endmacro %}
+
+{% macro print_compare(node) -%}
+  {{ print_form(node.left) }}
+  {{ print_op(node.ops[0]) }}
+  {{ print_form(node.comparators[0]) }}
 {%- endmacro %}
 
 {% macro print_form(node) %}
@@ -268,6 +274,8 @@
     {{- print_if_exp(node) -}}
   {%- elif node.node_type == 'Assign' -%}
     {{- print_assign(node) -}}
+  {%- elif node.node_type == 'AugAssign' -%}
+    {{- print_augassign(node) -}}
   {%- elif node.node_type == 'NameConstant' -%}
     {{- print_name_constant(node) -}}
   {%- elif node.node_type == 'Num' -%}
