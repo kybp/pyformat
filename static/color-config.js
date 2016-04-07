@@ -1,9 +1,11 @@
+'use strict';
+
 var updateColor = function(name) {
   var checkbox = $("#" + name + "-is-set");
   var elements = $(".python-" + name);
 
   if (checkbox.is(":checked")) {
-    if (checkbox.parent().hasClass("ignore")) {
+    if (checkbox.parent().parent().hasClass("ignore")) {
       elements.css("color", $("#default-color").val());
     } else {
       elements.css("color", $("#" + name + "-color").val());
@@ -16,7 +18,14 @@ var loadColors = function(colors) {
 
   var cookies = document.cookie.split(/; */);
   if (cookies.length === 1 && cookies[0] === '') {
-    // default
+    $(".option").addClass("ignore");
+    console.log("default");
+    $("#default-color").val("#ffffff");
+    $("#loop-section-is-set").prop("checked", true);
+    $("#for-color").val("#ad1993");
+    $("#loop-color").parent().parent().nextUntil("tr.section")
+      .removeClass("ignore");
+    $("#for-is-set").prop("checked", true);
   } else {
     $.each(cookies, function() {
       var splitCookie = this.split('=');
@@ -25,8 +34,9 @@ var loadColors = function(colors) {
       var element = $(document.getElementById(id));
 
       if (val === "checked") {
-        console.log(this);
         element.prop("checked", true);
+      } else if (val === "ignore") {
+        element.addClass("ignore");
       } else {
         element.val(val);
       }
@@ -38,7 +48,13 @@ var loadColors = function(colors) {
 
 var saveColors = function() {
   var checked = []
-  var colors = {}
+  var ignored = []
+  var colors  = {}
+
+  $(".ignore.option").each(function() {
+    var id = $(this).attr("id");
+    ignored.push(id);
+  });
 
   colors['default-color'] = $("#default-color").val()
   colors['background-color'] = $("#background-color").val()
@@ -49,14 +65,16 @@ var saveColors = function() {
 
     if ($(checkbox).is(":checked")) {
       checked.push($(checkbox).attr("id"));
-    } else console.log($(checkbox).attr("id") + " is not checked")
+    }
   });
+
+  console.log(ignored)
 
   $.ajax({
     type: "POST",
     contentType: "application/json",
     url: $save_url,
-    data: JSON.stringify({colors: colors, checked: checked})
+    data: JSON.stringify({colors: colors, checked: checked, ignored: ignored})
   });
 }
 
@@ -107,8 +125,7 @@ $(function() {
   $("#updateColors").click(updateAllColors);
 
   $("tr.section").children().children("[type=checkbox]").click(function() {
-    $(this).parent().parent().nextUntil("tr.section")
-      .children().toggleClass("ignore");
+    $(this).parent().parent().nextUntil("tr.section").toggleClass("ignore");
   });
 
   $("td.section-label").click(function() {

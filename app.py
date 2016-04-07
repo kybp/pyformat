@@ -61,6 +61,8 @@ def save():
         response.set_cookie(name, color)
     for name in json['checked']:
         response.set_cookie(name, 'checked')
+    for name in json['ignored']:
+        response.set_cookie(name, 'ignore')
 
     return response
 

@@ -9,14 +9,6 @@ div.python-line + div.empty-line {
     margin-top: 16px;
 }
 
-span.python-keyword {
-    color: #f0f;
-}
-
-span.python-import {
-    color: #777;
-}
-
 span.expand-marker {
     font-family: courier;
 }

@@ -7,16 +7,16 @@
   </tr>
   <tr>
     <td>Default</td>
-    <td><input type="color" id="{{ class_name }}-color"></td>
+    <td><input type="color"    id="{{ class_name }}-color"></td>
     <td><input type="checkbox" id="{{ class_name }}-is-set" checked></td>
   </tr>
 {%- endmacro %}
 
 {% macro color_option(name) -%}
-  <tr>
+  <tr class="option" id="{{ name | lower }}-option">
     <td>{{ name }}</td>
-    <td><input type="color" id="{{ name | lower }}-color"></td>
-    <td><input type="checkbox" id="{{ name | lower}}-is-set"></td>
+    <td><input type="color"    id="{{ name | lower }}-color"></td>
+    <td><input type="checkbox" id="{{ name | lower }}-is-set"></td>
   </tr>
 {%- endmacro %}
 
@@ -30,7 +30,7 @@
       <td>Background</td>
       <td colspan="3"><input type="color" id="background-color"></td>
     </tr>
-    <tr>
+    <tr class="option" id="name-option">
       <td>Names</td>
       <td><input type="color" id="name-color"></td>
       <td><input type="checkbox" id="name-is-set" checked></td>
