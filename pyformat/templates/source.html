@@ -122,6 +122,16 @@
   {%- endfor -%}
 {%- endmacro %}
 
+{% macro print_dict_comp(node) -%}
+  {
+  {{- print_form(node.key) -}}:
+  {{ print_form(node.value) }}
+  {% for generator in node.generators %}
+    {{ print_generator(generator) -}}
+  {%- endfor -%}
+  }
+{%- endmacro %}
+
 {% macro print_tuple(node) -%}
   (
   {%- for elt in node.elts -%}
@@ -272,6 +282,8 @@
     {%- else -%}
       {{- print_form(node.value) -}}
     {%- endif -%}
+  {%- elif node.node_type == 'DictComp' -%}
+    {{- print_dict_comp(node) -}}
   {%- elif node.node_type == 'ListComp' -%}
     {{- print_list_comp(node) -}}
   {%- elif node.node_type == 'Tuple' -%}
