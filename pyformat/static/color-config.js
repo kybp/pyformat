@@ -19,7 +19,6 @@ var loadColors = function(colors) {
   var cookies = document.cookie.split(/; */);
   if (cookies.length === 1 && cookies[0] === '') {
     $(".option").addClass("ignore");
-    console.log("default");
     $("#default-color").val("#ffffff");
     $("#loop-section-is-set").prop("checked", true);
     $("#for-color").val("#ad1993");
@@ -67,8 +66,6 @@ var saveColors = function() {
       checked.push($(checkbox).attr("id"));
     }
   });
-
-  console.log(ignored)
 
   $.ajax({
     type: "POST",
