@@ -9,12 +9,18 @@ class TestStringEndFinder(unittest.TestCase):
     def test_find_string_end(self):
         self.assertEqual(self.index_after_string("print('foo')", 6), 11)
 
+    def test_handles_double_quotes(self):
+        self.assertEqual(self.index_after_string('"foo"', 0), 5)
+
     def test_unterminated_string(self):
         string = "print('foo)"
         self.assertEqual(self.index_after_string(string, 6), len(string))
 
     def test_invalid_start_index(self):
         self.assertRaises(ValueError, self.index_after_string, "'foo'", 1)
+
+    def test_handles_long_string(self):
+        self.assertEqual(self.index_after_string("'''a\nb'''", 0), 9)
 
 @patch('random.randint', return_value=0)
 class TestPrefixGenerator(unittest.TestCase):
