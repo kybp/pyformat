@@ -1,8 +1,13 @@
+import re
 from flask import Flask
 
 app = Flask(__name__)
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
+
+def escape_quotes_filter(string):
+    return re.sub("'", "\\'", string)
+app.jinja_env.filters['escape_quotes'] = escape_quotes_filter
 
 def op_name_filter(op_name):
     return {

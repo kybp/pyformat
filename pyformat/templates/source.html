@@ -281,7 +281,9 @@
   {%- elif node.node_type == 'Num' -%}
     <span class="python-literal python-number">{{ node.n }}</span>
   {%- elif node.node_type == 'Str' -%}
-    <span class="python-literal python-string">'{{ node.s }}'</span>
+    <span class="python-literal python-string">'
+      {{- node.s|escape_quotes -}}'
+    </span>
   {%- elif node.node_type == 'Name' -%}
     <span class="python-name">{{ node.id }}</span>
   {%- elif node.node_type == 'BinOp' -%}
