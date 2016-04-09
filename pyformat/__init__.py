@@ -1,9 +1,13 @@
+import os
 import re
 from flask import Flask
+from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+db = SQLAlchemy(app)
 
 def escape_quotes_filter(string):
     return re.sub("'", "\\'", string)
