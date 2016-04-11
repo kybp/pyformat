@@ -10,7 +10,10 @@ def index():
 
 @app.route('/paste', methods=['POST'])
 def paste():
-    source = request.form['source'] or ''
+    source = request.form['source']
+    if source is None:
+        flash("You can't submit an empty paste")
+        return redirect(url_for('index'))
     try:
         PythonParser.parse(source)
     except SyntaxError:
