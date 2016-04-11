@@ -2,9 +2,9 @@
 
 {% block body %}
 
-<form action="{{ url_for('format') }}" method="POST">
+<form action="{{ url_for('paste') }}" method="POST">
   <textarea name="source" cols="50" rows="20"></textarea>
-  <input type="submit" value="Format">
+  <input type="submit" value="Paste">
 </form>
 
 {% endblock %}

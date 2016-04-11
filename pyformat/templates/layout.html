@@ -8,6 +8,15 @@
           href="{{ url_for('static', filename='source.css') }}">
   </head>
   <body>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
     <h1>Python 3 Source Formatter</h1>
     {% block body %}{% endblock %}
   </body>

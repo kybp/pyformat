@@ -1,18 +1,34 @@
-from flask import Flask, make_response, render_template, request
+from flask import Flask, make_response, redirect, render_template
+from flask import request, url_for
 from pyformat import app
+from pyformat.models import Paste
 from pyformat.parser import PythonParser
 
 @app.route('/')
 def index():
     return render_template('input.html')
 
-@app.route('/format', methods=['POST'])
-def format():
-    prefix, ast = PythonParser.parse(request.form['source'] or '')
+@app.route('/paste', methods=['POST'])
+def paste():
+    source = request.form['source'] or ''
+    try:
+        PythonParser.parse(source)
+    except SyntaxError:
+        flash('Syntax error in source')
+        return redirect(url_for('index'))
+    new_paste = Paste(source)
+    db.session.add(new_paste)
+    db.session.commit()
+    return redirect(url_for('view', paste_id=new_paste.id))
+
+@app.route('/<int:paste_id>')
+def view(paste_id):
+    text = Paste.query.get_or_404(paste_id).text
+    prefix, ast = PythonParser.parse(text)
     return render_template('source.html', ast=ast, comment_prefix=prefix)
 
-@app.route('/save', methods=['POST'])
-def save():
+@app.route('/save-settings', methods=['POST'])
+def save_settings():
     json = request.get_json()
     response = make_response()
 
