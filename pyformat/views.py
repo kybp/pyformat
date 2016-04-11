@@ -1,6 +1,6 @@
-from flask import Flask, make_response, redirect, render_template
-from flask import request, url_for
-from pyformat import app
+from flask import Flask, flash, make_response, redirect
+from flask import render_template, request, url_for
+from pyformat import app, db
 from pyformat.models import Paste
 from pyformat.parser import PythonParser
 
