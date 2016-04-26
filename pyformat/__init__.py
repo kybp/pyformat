@@ -10,6 +10,7 @@ app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
+app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 
