@@ -1,4 +1,9 @@
+form.color-config {
+    float: right;
+}
+
 div.python-source {
+    float: left;
     font-family: courier;
     font-size: 16px;
     border: 1px solid black;
